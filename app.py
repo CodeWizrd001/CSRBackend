@@ -4,6 +4,7 @@ from flask import request
 from flask_cors import CORS , cross_origin
 
 from dotenv import load_dotenv
+import base64
 import json
 import time
 import os
@@ -33,7 +34,10 @@ cors = CORS(
 
 uploads_dir = 'temp'
 
-os.makedirs(uploads_dir)
+try :
+    os.makedirs(uploads_dir)
+except :
+    pass
 
 # Routes
 @app.route('/',methods=['POST','GET'])
@@ -46,21 +50,26 @@ def indexRoute() :
 
 @app.route('/getchar',methods=['POST'])
 def get() :
+    print(f'[+] Request : {request}')
+    # return {'character' : 'm'}
     try :
         fName = time.time()
         try :
             file_ = request.files['file']
-            print(file_)
-
+            # print(file_)
             file_.save(f'./temp/{fName}.jpg')
-            print('File Saved')
         except :
-            file_ = request.form.get('file') 
+            return {'STATUS' : 'INVALID_REQUEST'}
         return {'character':predict(f'./temp/{fName}.jpg')}
     except BaseException as e:
+        # raise
         print(f'[!] Error : {e}')
         return {'STATUS' : 'INTERNAL_ERROR'}
 
+@app.route('/getwords',methods=['POST'])
+def words() :
+
+    return {'RESPONSE' : wordList }
 
 if __name__ == '__main__':
     app.run()

@@ -3,11 +3,16 @@ import cv2
 import time
 import joblib
 import mediapipe as mp
+
+import pandas as pd
+
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
 
 single_model = joblib.load('model/models/single_mlp.pkl')
 both_model = joblib.load('model/models/both_mlp.pkl')
+
+alphabets = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
 def predict(img) :
     IMAGE_FILES = [img]
@@ -99,6 +104,12 @@ def predict(img) :
     os.remove(img)
 
     if(len(result_dict)==63):
-        return alphabets[single_model.predict(new_result_arr)[0]]
+        response = alphabets[single_model.predict(new_result_arr)[0]]
     elif(len(result_dict)==126):
-        return alphabets[both_model.predict(new_result_arr)[0]]
+        response = alphabets[both_model.predict(new_result_arr)[0]]
+    else :
+        response = ' '
+
+    # print(response)
+
+    return response
