@@ -43,6 +43,7 @@ def get() :
     file_ = request.files['image'].read()
     f = np.fromstring(file_,np.uint8)
     img = cv2.imdecode(f,cv2.IMREAD_COLOR)
+    return {}
 
 
 if __name__ == '__main__':
