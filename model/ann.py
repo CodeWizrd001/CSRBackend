@@ -17,9 +17,17 @@ alphabets = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G'
 def predict(img) :
     IMAGE_FILES = [img]
     result_dict={}
-    with mp_hands.Hands(static_image_mode=True,max_num_hands=2,min_detection_confidence=0.4) as hands:
+    with mp_hands.Hands(
+        static_image_mode=True,
+        max_num_hands=2,
+        min_detection_confidence=0.2) as hands:
         for idx, file in enumerate(IMAGE_FILES):
-            image = cv2.flip(cv2.imread(file), 1)
+            img = cv2.imread(file)
+            height, width, channels = img.shape
+            cropped_image = img[height//2-width//2:height//2+width//2, 0:width]
+            image = cropped_image # cv2.flip(cropped_image, 1)
+            # tfName = f'./temp/crop_{time.time()}.jpg'
+            cv2.imwrite(tfName,image)
             results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
             if not results.multi_hand_landmarks:
                     continue
@@ -110,6 +118,6 @@ def predict(img) :
     else :
         response = ' '
 
-    # print(response)
+    print(response)
 
     return response

@@ -4,6 +4,7 @@ from flask import request
 from flask_cors import CORS , cross_origin
 
 from dotenv import load_dotenv
+import wordninja
 import base64
 import json
 import time
@@ -68,8 +69,8 @@ def get() :
 
 @app.route('/getwords',methods=['POST'])
 def words() :
-
-    return {'RESPONSE' : wordList }
+    wordList = ''
+    return {'RESPONSE' : wordninja.split(wordList) }
 
 if __name__ == '__main__':
     app.run()

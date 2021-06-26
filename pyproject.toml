@@ -12,6 +12,8 @@ tensorflow = "^2.5.0"
 Flask-Cors = "^3.0.10"
 python-dotenv = "^0.18.0"
 pandas = "^1.2.5"
+nltk = "^3.6.2"
+wordninja = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 
