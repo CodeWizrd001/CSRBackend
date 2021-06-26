@@ -5,10 +5,12 @@ from flask_cors import CORS , cross_origin
 
 from dotenv import load_dotenv
 import json
+import time
 import os
 
 # Model Imports
 # from model import Model
+from model.ann import predict
 
 # Util Imports
 import numpy as np
@@ -28,7 +30,11 @@ cors = CORS(
         "http://localhost:4200",
     ],
 )
-    
+
+uploads_dir = 'temp'
+
+os.makedirs(uploads_dir)
+
 # Routes
 @app.route('/',methods=['POST','GET'])
 def indexRoute() :
@@ -40,10 +46,20 @@ def indexRoute() :
 
 @app.route('/getchar',methods=['POST'])
 def get() :
-    file_ = request.files['image'].read()
-    f = np.fromstring(file_,np.uint8)
-    img = cv2.imdecode(f,cv2.IMREAD_COLOR)
-    return {}
+    try :
+        fName = time.time()
+        try :
+            file_ = request.files['file']
+            print(file_)
+
+            file_.save(f'./temp/{fName}.jpg')
+            print('File Saved')
+        except :
+            file_ = request.form.get('file') 
+        return {'character':predict(f'./temp/{fName}.jpg')}
+    except BaseException as e:
+        print(f'[!] Error : {e}')
+        return {'STATUS' : 'INTERNAL_ERROR'}
 
 
 if __name__ == '__main__':
